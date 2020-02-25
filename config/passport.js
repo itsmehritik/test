@@ -4,27 +4,25 @@ const config = require('../config/database');
 module.exports = (passport) => {
     //local Stategy
     passport.use(new LocalStrategy({
-            passReqToCallback: true
+            usernameField: 'email'
         },
-        function (email, password, done) {
+        (email, password, done) => {
             Register.findOne({
-                email: email
-            }, function (err, user) {
-                if (err) throw err;
-                if (!user) {
-                    return done(null, false, {
-                        message: 'no user found with this email'
-                    });
-                }
-                if (!user.verifyPassword(password)) {
-                    return done(null, false, {
-                        message: 'worng password'
-                    });
-                }
-                return done(null, user);
-            })
-            console.log('email');
-            ;
+                    email: email
+                })
+                .then(user => {
+                    if (!user) {
+                        return done(null, false, {
+                            message: 'email is not registered'
+                        })
+                    }
+                    if (!user.password) {
+                        return done(null, false, {
+                            message: 'Incorrect password.'
+                        });
+                    }
+                   return done(null, user);
+                })
         }
     ));
 

@@ -42,9 +42,9 @@ mongoose.connect(config.database, {
 
 app.set('view-engine', 'ejs');
 
-app.get("/", (req, res) => {
-    res.render("index.ejs", {
-        user: "Hritik"
+app.get("/dashboard", (req, res) => {
+    res.render("dassboard.ejs", {
+        user: Register.name
     });
 });
 
@@ -72,20 +72,20 @@ app.post("/register", (req, res) => {
 });
 //passport config
 require('./config/passport')(passport);
-//passport middlewire
+//passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
 
 app.post("/login", (req, res, next) => {
 
     passport.authenticate('local', {
-        successRedirect: "/",
+        successRedirect: "/dashboard",
         failureRedirect: '/login',
-        failureFlash: true
+        failureFlash: true,
     })(req, res, next);
 });
 
 
-app.listen(3000, () => {
-    console.log("server is started on port 3000");
+app.listen(5000, () => {
+    console.log("server is started on port 5000");
 });
